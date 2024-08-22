@@ -1,0 +1,30 @@
+---
+- name: install dependencies
+  apt:
+   name:
+    - curl
+    - ca-certificates
+   state: present
+
+- name: add docker GPG apt Key
+  command: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+
+- name: setup docker repositoy
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable
+
+- name: Docker installation
+  apt:
+   name: docker-ce
+   state: present
+
+- name: Configuring docker daemon
+  template:
+    src: daemon.json.j2
+    dest: /etc/docker/daemon.json
+
+- name: docker start
+  systemd:
+    name: docker
+    enabled: yes
+    state: statrted
