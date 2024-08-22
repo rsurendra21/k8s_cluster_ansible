@@ -1,0 +1,14 @@
+---
+- name: rke binary download
+  get_url:
+   url: https://github.com/rancher/rke/releases/download/v1.3.14/rke_linux-amd64
+   dest: /usr/local/bin/rke
+   mode: "0755"
+
+- name: copy cluster.yml file
+  copy:
+   src: cluster.yml
+   dest: /home/test/cluster.yml
+
+- name: Create cluster by running rke
+  command: rke up --config /home/test/cluster.yml
